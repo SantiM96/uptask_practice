@@ -50,8 +50,18 @@ function validateRegister(e) {
                         title: 'Usuario Creado',
                         text: 'El usuario ha sido creado correctamente'
                     })
+                    .then(result => { 
+                        if (result.value) window.location.href = 'login.php';
+                    })
                 }
-                else if(answer.type === 'crear' && answer.answer === 'error') { 
+                else if(answer.type === 'crear' && answer.answer === 'error' && answer.error === 'Usuario existente') { 
+                    swal({
+                        type: 'error',
+                        title: 'Error',
+                        text: 'El nombre ya está en uso'
+                    })
+                }
+                else { 
                     swal({
                         type: 'error',
                         title: 'Error',
@@ -77,8 +87,6 @@ function validateRegister(e) {
                         text: 'El usuario o contraseña son inválidos'
                     })
                 }
-
-
             }
         }
 

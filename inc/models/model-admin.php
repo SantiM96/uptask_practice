@@ -24,20 +24,48 @@ if($action === 'crear') {
     $hash_password = password_hash($password, PASSWORD_BCRYPT, $options);
 
     include '../functions/conection.php';
-
-    try {
-        $stmt = $conn->prepare("INSERT INTO users (user, password) VALUES (?, ?) ");
-        $stmt->bind_param('ss', $user, $hash_password);
+    
+    try{
+        //check if username is already in use
+        $stmt = $conn->prepare("SELECT user FROM users WHERE user = ?");
+        $stmt->bind_param('s', $user);
         $stmt->execute();
-        if($stmt->affected_rows) {
+
+        $stmt->bind_result($name_user);
+        $stmt->fetch();
+        if($name_user) {
             $answer = array(
-                'answer' => 'success',
-                'insert_id' => $stmt->insert_id,
+                'answer' => 'error',
+                'error' => 'Usuario existente',
                 'type' => $action
             );
         }
-        $stmt->close();
-        $conn->close();
+        else {
+            //create a new user
+            try {
+                $stmt = $conn->prepare("INSERT INTO users (user, password) VALUES (?, ?) ");
+                $stmt->bind_param('ss', $user, $hash_password);
+                $stmt->execute();
+                if($stmt->affected_rows) {
+                    $answer = array(
+                        'answer' => 'success',
+                        'insert_id' => $stmt->insert_id,
+                        'type' => $action
+                    );
+                }
+            }
+            catch(Exception $e) {
+                $answer = array(
+                    'answer' => 'error',
+                    'error' => $e->getMessage(),
+                    'type' => $action
+                );
+            }
+            $stmt->close();
+            $conn->close();
+        }
+
+
     }
     catch(Exception $e) {
         $answer = array(
@@ -46,6 +74,7 @@ if($action === 'crear') {
             'type' => $action
         );
     }
+    
     echo json_encode($answer);
 
 
@@ -91,9 +120,6 @@ if($action === 'login') {
                 'type' => $action
             );
         }
-
-        $stmt->close();
-        $conn->close();
     }
     catch(Exception $e) {
         $answer = array(
@@ -102,6 +128,8 @@ if($action === 'login') {
             'type' => $action
         );
     }
+    $stmt->close();
+    $conn->close();
 
     echo json_encode($answer);
 }
