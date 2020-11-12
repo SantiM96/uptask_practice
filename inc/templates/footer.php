@@ -4,6 +4,9 @@
         if($page === "login" || $page === "crear-cuenta") {
             echo '<script src="js/form.js"></script>';
         }
+        else {
+            echo '<script src="js/scripts.js"></script>';
+        }
     ?>
     
 </body>

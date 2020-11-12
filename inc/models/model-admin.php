@@ -53,6 +53,7 @@ if($action === 'crear') {
                         'type' => $action
                     );
                 }
+                $stmt->close();
             }
             catch(Exception $e) {
                 $answer = array(
@@ -61,7 +62,6 @@ if($action === 'crear') {
                     'type' => $action
                 );
             }
-            $stmt->close();
             $conn->close();
         }
 
@@ -120,6 +120,7 @@ if($action === 'login') {
                 'type' => $action
             );
         }
+        $stmt->close();
     }
     catch(Exception $e) {
         $answer = array(
@@ -128,7 +129,6 @@ if($action === 'login') {
             'type' => $action
         );
     }
-    $stmt->close();
     $conn->close();
 
     echo json_encode($answer);

@@ -147,6 +147,12 @@ body.index {
 .lista-proyectos ul li {
     margin-bottom: 1rem;
 }
+.lista-proyectos ul li input {
+    background-color: #949494;
+    color: white;
+    border-radius: .5rem;
+    padding: .35rem .6rem;
+}
 .lista-proyectos ul li a:hover {
     color: #FDD835;
 }
@@ -215,8 +221,8 @@ body.index {
 .acciones i:last-child{
     margin-left: 3rem;
 }
-.completo {
-    color: #00B762;
+.complete {
+    color: #00B762!important;
 }
 .alerta {
     background-color: red;
