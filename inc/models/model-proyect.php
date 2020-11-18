@@ -1,33 +1,91 @@
 <?php
 
-$proyect = $_POST['proyect'];
 $action = $_POST['action'];
 
 include '../functions/conection.php';
 
-try {
-    $stmt = $conn->prepare("INSERT INTO proyects (proyect) VALUE (?)");
-    $stmt->bind_param('s', $proyect);
-    $stmt->execute();
+if($action === "crear") {
+    $proyect = $_POST['proyect'];
 
-    if($stmt->affected_rows) {
+    try {
+        $stmt = $conn->prepare("INSERT INTO proyects (proyect) VALUE (?)");
+        $stmt->bind_param('s', $proyect);
+        $stmt->execute();
+
+        if($stmt->affected_rows) {
+            $answer = array(
+                'answer' => 'success',
+                'proyect' => $proyect,
+                'id_return' => $stmt->insert_id
+            );
+        }
+
+        $stmt->close();
+        $conn->close();
+    }
+    catch(Exception $e) {
         $answer = array(
-            'answer' => 'success',
-            'proyect' => $proyect,
-            'id_return' => $stmt->insert_id
+            'answer' => 'error',
+            'error' => $e->getMessage()
+        );
+    }
+    echo json_encode($answer);
+}
+
+
+if($action === "borrar") {
+
+    $id = $_POST['id'];
+
+    //delete tasks
+    try {
+        $stmt = $conn->prepare("DELETE FROM task WHERE id_proyect = ?");
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+
+        if($stmt->affected_rows > 0) {
+            $answer = array(
+                'answer_task' => 'success',
+                'id_deleted_task' => $id
+            );
+        }
+        $stmt->close();
+
+    }
+    catch(Exception $e){
+        $answertask = array(
+            'answer' => 'error',
+            'error' => $e->getMessage()
         );
     }
 
-    $stmt->close();
+
+    //delete proyect
+    try {
+        $stmt = $conn->prepare("DELETE FROM proyects WHERE id = ?");
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+
+        if($stmt->affected_rows > 0) {
+            $answer['answer_proyects'] = 'success';
+            $answer['id_deleted_proyect'] = $id;
+        }
+
+        $stmt->close();
+        $conn->close();
+    }
+    catch(Exception $e){
+        $answertask = array(
+            'answer' => 'error',
+            'error' => $e->getMessage()
+        );
+    }
+
+
+    echo json_encode($answer);
+
 }
-catch(Exception $e) {
-    $answer = array(
-        'answer' => 'error',
-        'error' => $e->getMessage()
-    );
-}
-
-$conn->close();
 
 
-echo json_encode($answer);
+
+

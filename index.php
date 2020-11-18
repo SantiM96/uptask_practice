@@ -37,16 +37,17 @@
 
         <div class="listado-pendientes">
             <ul>
-                <?php $tasks = (getTasks($id_proyect)); ?>
-                <?php var_dump();
-                
+                <?php $tasks = getTasks($id_proyect);
+
                 if($tasks->num_rows > 0):
                     foreach($tasks as $task): ?>
 
                         <li id="task:<?php echo $task['id'] ?>" class="tarea">
                             <p><?php echo $task['name'] ?></p>
                             <div class="acciones">
-                                <i class="far fa-check-circle"></i>
+                                <i class="far fa-edit"></i>
+                                <i class="far fa-check-circle <?php 
+                                if(getStatus($task['id']) == 1) echo "complete"; ?>"></i>
                                 <i class="fas fa-trash"></i>
                             </div>
                         </li>  

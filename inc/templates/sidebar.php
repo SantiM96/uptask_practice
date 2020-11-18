@@ -14,16 +14,13 @@
                         foreach($proyects as $proyect) { ?>
 
                             <li>
-                                <a href="index.php?id_return=<?php echo $proyect['id']; ?>" id="<?php echo $proyect['id']; ?>">
+                                <a href="index.php?id_return=<?php echo $proyect['id']; ?>" id="<?php echo $proyect['id']; ?>"" class="link">
                                     <?php echo $proyect['proyect']; ?>
                                 </a>
+                                <i class="fas fa-minus-circle"></i>
                             </li>
 
                             <?php 
-                            /*
-                            echo "<pre>";
-                                var_dump($proyect);
-                            echo "</pre>";*/
                         }
                     }
                 ?> 

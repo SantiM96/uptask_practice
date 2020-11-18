@@ -13,6 +13,9 @@ body {
 .swal2-shown aside {
     height: 100vh;
 }
+.none {
+    display: none!important;
+}
 /** Login **/
 .login,
 .crear-cuenta {
@@ -146,6 +149,8 @@ body.index {
 }
 .lista-proyectos ul li {
     margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
 }
 .lista-proyectos ul li input {
     background-color: #949494;
@@ -153,8 +158,19 @@ body.index {
     border-radius: .5rem;
     padding: .35rem .6rem;
 }
+.lista-proyectos ul li a {
+    transition: all .25s ease;
+}
 .lista-proyectos ul li a:hover {
     color: #FDD835;
+}
+.lista-proyectos ul li i {
+    margin: .15rem 0 0 .3rem;
+    transition: all .25s ease;
+}
+.lista-proyectos ul li i:hover {
+    color: #FDD835;
+    cursor: pointer;
 }
 
 
@@ -215,19 +231,32 @@ body.index {
 .listado-pendientes ul li:last-of-type {
     border-bottom: none;
 }
+.listado-pendientes ul li input {
+    height: 1.55rem;
+    border: #707070;
+    background-color: #fcfcfc;
+    border-radius: .5rem;
+}
 .listado-pendientes ul li i {
     cursor: pointer;
 }
-.acciones i:last-child{
+.acciones i:nth-child(2),
+.acciones i:last-child {
     margin-left: 3rem;
 }
 .complete {
     color: #00B762!important;
 }
 .alerta {
-    background-color: red;
+    background-color: #fa0505;
     padding: .5rem;
     text-align: center;
     color: white;
     font-size: 1.2rem;
+}
+.swal2-confirm {
+    order: 2
+}
+.swal2-cancel {
+    order: 1
 }

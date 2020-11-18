@@ -51,5 +51,23 @@
         }
     }
 
+    function getStatus($id = null) {
+        include 'conection.php';
+
+        try {
+            $stmt = $conn->prepare("SELECT state FROM task WHERE id = ?");
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+
+            $stmt->bind_result($status);
+            $stmt->fetch();
+            
+            return $status;
+        }
+        catch(Exception $e) {
+            echo "Error: " . $e->getMessage();
+            return "No se consiguió el status";
+        }
+    }
 
 
