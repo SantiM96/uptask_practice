@@ -19,7 +19,7 @@ function eventLiseners() {
     document.querySelector('#proyectos').addEventListener('click', deleteTask);
 
 
-    //change status, delete or edit tasks with delegation
+    //change status, delete, edit or move tasks with delegation
     document.querySelector('.listado-pendientes').addEventListener('click', modTask)
 }
 
@@ -49,7 +49,8 @@ function newProyect(e) {
                 })
             }
             else { 
-                saveProyectDB(inputNewProyect.value);
+                let idUser = document.querySelector('.barra p');
+                saveProyectDB(inputNewProyect.value, idUser.id);
                 proyectList.removeChild(newProyect);
             }
             
@@ -57,14 +58,15 @@ function newProyect(e) {
     });
 }
 
-function saveProyectDB(proyectName) {
+function saveProyectDB(proyectName, id) {
 
     //call ajax
     let xhr = new XMLHttpRequest();
 
-    //send dates by formdate
+    //send dates by FormData
     let dates = new FormData();
     dates.append('proyect', proyectName);
+    dates.append('idUser', id);
     dates.append('action', 'crear');
 
 
@@ -104,8 +106,13 @@ function saveProyectDB(proyectName) {
 function addTask(e) { 
     e.preventDefault();
     
-    nameTask = document.querySelector('.nombre-tarea').value;
-    idProyect = document.querySelector('.id_proyect').value;
+    let nameTask = document.querySelector('.nombre-tarea').value,
+        idProyect = document.querySelector('.id_proyect').value;
+
+    if(document.querySelector('.tarea')) { 
+        let orderBefore = document.querySelector('.tarea');
+        console.log(orderBefore);
+    }
 
     
     if(nameTask === "") {
@@ -387,7 +394,7 @@ function modTask(e) {
                                 filling = document.createElement('p');
                             
                         
-                            newP.innerHTML = answer.name_edit;
+                            newP.innerHTML = answer.name_edited;
                             filling.classList.add('none');
 
 
@@ -417,5 +424,130 @@ function modTask(e) {
     
     }
 
+
+    //Move order tasks
+    if (e.target.classList.contains('fa-arrow-up') || e.target.classList.contains('fa-arrow-down')) { 
+        
+        let currentlyOrder = e.target.parentNode.parentNode.id,
+            currentlyOrderId = parseInt(currentlyOrder.replace('order', '')),
+            idProyect = document.querySelector('.id_proyect').value,
+            taskChange = "",
+            orderChange = "",
+            taskForChange = "",
+            orderForChange = "";
+        
+        
+        listsAll = document.querySelectorAll('.tarea');
+
+        /*
+        listsAll.forEach(element => {
+            if (element.style.order == 2) { 
+                console.log(element);
+            }
+        });*/
+
+
+        //go up
+        if (e.target.classList.contains('fa-arrow-up')) { 
+            newOrder = "order" + (currentlyOrderId - 1);
+            if (document.querySelector(`#${newOrder}`)) { 
+                //console.log('De "' + currentlyOrder + '" a "' + newOrder + '"');
+                
+                taskChange = parseInt(e.target.parentNode.parentNode.parentNode.id.replace('task:', ''));
+                taskChangeElement = e.target.parentNode.parentNode.parentNode;
+                orderChange = parseInt(e.target.parentNode.parentNode.parentNode.style.order);
+
+                
+                orderForChange = orderChange - 1;
+                taskForChangeElement = getElementByOrder(orderForChange);
+                taskForChange = parseInt(taskForChangeElement.id.replace('task:', ''));
+
+                //console.log(taskChange);
+                //console.log(taskForChange);
+            }
+            else console.log("Ya es el primero");
+        }
+
+        //go down
+        if (e.target.classList.contains('fa-arrow-down')) { 
+            newOrder = "order" + (currentlyOrderId + 1);
+            if (document.querySelector(`#${newOrder}`)) { 
+                //console.log('De "' + currentlyOrder + '" a "' + newOrder + '"');
+
+
+                taskChange = parseInt(e.target.parentNode.parentNode.parentNode.id.replace('task:', ''));
+                taskChangeElement = e.target.parentNode.parentNode.parentNode;
+                orderChange = parseInt(e.target.parentNode.parentNode.parentNode.style.order);
+
+                orderForChange = orderChange + 1;
+                taskForChangeElement = getElementByOrder(orderForChange);
+                taskForChange = parseInt(getElementByOrder(orderForChange).id.replace('task:', ''));
+
+                /*
+                console.log(taskChange);
+                console.log(orderChange);
+                console.log(taskForChange);
+                console.log(orderForChange);*/
+            }
+            else console.log("Ya es el ultimo");
+        }
+
+        
+        //apply order changes to the DB
+        if (orderChange !== "") { 
+            //console.log("hago el cambio de " + orderChange + " por " + orderForChange);
+            //console.log(orderChange);
+            //console.log(orderForChange);
+
+
+            //call ajax
+            let xhr = new XMLHttpRequest();
+
+            //prepare dates to send with FormData
+            let dates = new FormData();
+            //dates.append('idProyect', idProyect);
+            dates.append('taskChange', taskChange);
+            dates.append('orderChange', orderChange);
+            dates.append('taskForChange', taskForChange);
+            dates.append('orderForChange', orderForChange);
+            dates.append('action', 'move');
+
+
+            //open connection
+            xhr.open('POST', 'inc/models/model-task.php', true);
+
+            //return dates from model-task.php
+            xhr.onload = function() { 
+                if (this.status === 200) { 
+                    console.log(JSON.parse(xhr.responseText));
+                    answer = JSON.parse(xhr.responseText);
+                    if (answer.answer == 'success') { 
+                        console.log(taskChangeElement);
+                        console.log(taskForChangeElement);
+                        taskChangeElement.style.order = orderForChange;
+                        taskForChangeElement.style.order = orderChange;
+                        
+                    }
+                }
+            }
+
+            //send dates
+            xhr.send(dates);
+            
+
+
+        }
+    }
+
+}
+
+function getElementByOrder(order) { 
+    listsAll = document.querySelectorAll('.tarea');
+    listsAll.forEach(element => {
+        if (element.style.order == order) { 
+            elementoReturn = element;
+        }
+    });
+    return elementoReturn;
 }
 

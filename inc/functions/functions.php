@@ -7,11 +7,11 @@
         return $pageName;
     }
 
-    function getProyects() {
+    function getProyects($id = null) {
         include 'conection.php';
 
         try {
-            return $conn->query("SELECT id, proyect FROM proyects");
+            return $conn->query("SELECT id, proyect FROM proyects WHERE id_user = $id");
         }
         catch(Exception $e) {
             echo "Error: " . $e->getMessage();
@@ -43,7 +43,7 @@
         include 'conection.php';
 
         try {
-            return $conn->query("SELECT id, name FROM task WHERE id_proyect = {$id}");
+            return $conn->query("SELECT id, name, order_show FROM task WHERE id_proyect = {$id}");
         }
         catch(Exception $e) {
             echo "Error: " . $e->getMessage();

@@ -6,16 +6,18 @@ include '../functions/conection.php';
 
 if($action === "crear") {
     $proyect = $_POST['proyect'];
+    $id_user = $_POST['idUser'];
 
     try {
-        $stmt = $conn->prepare("INSERT INTO proyects (proyect) VALUE (?)");
-        $stmt->bind_param('s', $proyect);
+        $stmt = $conn->prepare("INSERT INTO proyects (proyect, id_user) VALUE (?, ?)");
+        $stmt->bind_param('si', $proyect, $id_user);
         $stmt->execute();
 
         if($stmt->affected_rows) {
             $answer = array(
                 'answer' => 'success',
                 'proyect' => $proyect,
+                'id_user' => $id_user,
                 'id_return' => $stmt->insert_id
             );
         }

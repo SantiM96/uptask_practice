@@ -41,17 +41,21 @@
 
                 if($tasks->num_rows > 0):
                     foreach($tasks as $task): ?>
+                        
 
-                        <li id="task:<?php echo $task['id'] ?>" class="tarea">
+                        <li style="order: <?php echo $task['order_show']; ?>" id="task:<?php echo $task['id'] ?>" class="tarea">
                             <p><?php echo $task['name'] ?></p>
-                            <div class="acciones">
+                            <div id="order<?php echo $task['order_show']; ?>" class="acciones">
                                 <i class="far fa-edit"></i>
-                                <i class="far fa-check-circle <?php 
-                                if(getStatus($task['id']) == 1) echo "complete"; ?>"></i>
+                                <i class="far fa-check-circle <?php if(getStatus($task['id']) == 1) echo "complete"; ?>"></i>
                                 <i class="fas fa-trash"></i>
+                                <div class="up-down">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
                             </div>
                         </li>  
-
+                        
                     <?php endforeach; 
                 else: ?>
                 

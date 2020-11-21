@@ -101,7 +101,8 @@ body.index {
     justify-content: space-between;
     align-items: center;
 }
-.barra h1 {
+.barra h1,
+.barra p {
     color: white;
     margin:0;
     font-size: 1.4rem;
@@ -220,6 +221,8 @@ body.index {
 .listado-pendientes ul {
     padding: 0;
     list-style: none;
+    display: flex;
+    flex-direction: column;
 }
 .listado-pendientes ul li {
     display: flex;
@@ -227,9 +230,6 @@ body.index {
     justify-content: space-between;
     font-size: 1.4rem;
     border-bottom: 1px solid #d1d1d1;
-}
-.listado-pendientes ul li:last-of-type {
-    border-bottom: none;
 }
 .listado-pendientes ul li input {
     height: 1.55rem;
@@ -240,9 +240,12 @@ body.index {
 .listado-pendientes ul li i {
     cursor: pointer;
 }
-.acciones i:nth-child(2),
-.acciones i:last-child {
-    margin-left: 3rem;
+.acciones {
+    display: flex;
+    justify-content: space-between;
+}
+.acciones i {
+    margin-left: 2.5rem;
 }
 .complete {
     color: #00B762!important;
@@ -259,4 +262,22 @@ body.index {
 }
 .swal2-cancel {
     order: 1
+}
+.tarea {
+    order: 1;
+}
+.o1 {
+    order: 10;
+}
+.o2 {
+    order: 5;
+}
+.up-down {
+    display: flex;
+    flex-direction: column;
+}
+.up-down i {
+    font-size: 1rem;
+    margin-left: 2.5rem;
+    width: 10%;
 }

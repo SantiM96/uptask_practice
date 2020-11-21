@@ -88,8 +88,8 @@ if($action === "edit") {
         if($stmt->affected_rows > 0) {
             $answer = array(
                 'answer' => 'success',
-                'name_edit' => $name_edit,
-                'id_edit' => $id_edit
+                'name_edited' => $name_edit,
+                'id_edited' => $id_edit
             );
         }
         else {
@@ -117,6 +117,85 @@ if($action === "edit") {
 
 
 
+    
+
+    echo json_encode($answer);
+}
+
+
+if($action === "move") {
+    
+    $task_change = (int)$_POST['taskChange'];
+    $order_change = (int)$_POST['orderChange'];
+    $task_for_change = (int)$_POST['taskForChange'];
+    $order_for_change = (int)$_POST['orderForChange'];
+    
+    /*$answer = array(
+        'taskChange' => $task_change,
+        'orderChange' => $order_change,
+        'taskForChange' => $task_for_change,
+        'orderForChange' => $order_for_change
+    );*/
+    
+    try{
+        $stmt = $conn->prepare("UPDATE task SET order_show = ? WHERE id = ?;");
+        $stmt->bind_param('ii', $order_for_change, $task_change);
+        $stmt->execute();
+
+        if($stmt->affected_rows > 0) {
+            $change_one = true;
+        }
+
+        $stmt->close();
+    }
+    catch(Exception $e) {
+        $answer = array(
+            'answer' => 'error',
+            'error' => $e->getMessage()
+        );
+    }
+    try{
+        $stmt = $conn->prepare("UPDATE task SET order_show = ? WHERE id = ?;");
+        $stmt->bind_param('ii', $order_change, $task_for_change);
+        $stmt->execute();
+
+        if($stmt->affected_rows > 0) {
+            $change_two = true;
+        }
+
+        $stmt->close();
+        $conn->close();
+    }
+    catch(Exception $e) {
+        $answer = array(
+            'answer' => 'error',
+            'error' => $e->getMessage()
+        );
+    }
+
+    //answer
+    if($change_one && $change_two) {
+        $answer = array(
+            'answer' => 'success',
+            'task_changed' => $task_change,
+            'task_changed_for' => $task_for_change,
+            'order_changed' => $order_change,
+            'order_changed_for' => $order_for_change
+        );
+    }
+    else if($change_one){
+        $answer = array(
+            'answer' => 'error',
+            'try_one' => 'fail'
+        );
+    }
+    else {
+        $answer = array(
+            'answer' => 'error',
+            'try_two' => 'fail'
+        );
+    }
+    
     
 
     echo json_encode($answer);

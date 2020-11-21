@@ -8,7 +8,9 @@
             <ul id="proyectos">
                 <?php 
 
-                    $proyects = getProyects();
+
+                    $id_user = $_SESSION['id'];
+                    $proyects = getProyects($id_user);
 
                     if($proyects) {
                         foreach($proyects as $proyect) { ?>
