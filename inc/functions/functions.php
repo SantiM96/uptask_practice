@@ -7,6 +7,25 @@
         return $pageName;
     }
 
+    function checkUser($id_session, $id_proyect) {
+        include 'conection.php';
+        
+        try {
+            $stmt = $conn->prepare("SELECT id_user FROM proyects WHERE id = ?");
+            $stmt->bind_param('i', $id_proyect);
+            $stmt->execute();
+            
+            $stmt->bind_result($id_user);
+            $stmt->fetch();
+
+            if($id_user === $id_session) return true;
+            else return false;
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     function getProyects($id = null) {
         include 'conection.php';
 

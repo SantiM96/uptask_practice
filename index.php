@@ -5,6 +5,13 @@
 
     $id_proyect = $_GET['id_return'];
     $name_proyect = currentlyProyect($id_proyect);
+
+    if(isset($_GET['id_return'])) {
+        if(!checkUser($_SESSION['id'], $id_proyect)) {
+            echo "<script language=\"javascript\">window.location.href=\"index.php\";</script>";
+        }
+    }
+    
 ?>
 
 <div class="contenedor">
