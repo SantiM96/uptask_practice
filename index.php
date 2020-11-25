@@ -47,6 +47,7 @@
                 <?php $tasks = getTasks($id_proyect);
 
                 if($tasks->num_rows > 0):
+                    $hide_progress_bar = true;
                     foreach($tasks as $task): ?>
                         
 
@@ -64,7 +65,8 @@
                         </li>  
                         
                     <?php endforeach; 
-                else: ?>
+                else: 
+                    $hide_progress_bar = false; ?>
                 
                     <li id="no-task">
                         <p>No hay Tareas</p>
@@ -75,6 +77,14 @@
                 
             </ul>
         </div>
+
+        <?php if($hide_progress_bar): ?>
+
+            <div class="progress-bar">
+                <div id="percent" class="percent"></div>
+            </div>
+
+        <?php endif; ?>
     </main>
 </div><!--.contenedor-->
 

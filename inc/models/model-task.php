@@ -8,11 +8,12 @@ if($action === "crear") {
 
     $name_task = $_POST['nameTask'];
     $id_proyect = $_POST['idProyect'];
+    $order = (int)$_POST['order'];
     
 
     try{
-        $stmt = $conn->prepare("INSERT INTO task (name, id_proyect) VALUES (?, ?)");
-        $stmt->bind_param('si', $name_task, $id_proyect);
+        $stmt = $conn->prepare("INSERT INTO task (name, id_proyect, order_show) VALUES (?, ?, ?)");
+        $stmt->bind_param('sii', $name_task, $id_proyect, $order);
         $stmt->execute();
 
         if($stmt->affected_rows) {
@@ -20,6 +21,7 @@ if($action === "crear") {
                 'answer' => 'success',
                 'name_task' => $name_task,
                 'id_proyect' => $id_proyect,
+                'order' => $order,
                 'id_task' => $stmt->insert_id,
                 'action' => $action
             );
@@ -72,6 +74,33 @@ if($action === "borrar") {
 }
 
 
+if($action === "orders") {
+    $task_id = $_POST['taskId'];
+    $order = $_POST['newOrder'];
+
+    try {
+        $stmt = $conn->prepare("UPDATE task SET order_show = ? WHERE id = ?");
+        $stmt->bind_param('ii', $order, $task_id);
+        $stmt->execute();
+
+        if($stmt->affected_rows) {
+            $answer = array(
+                'answer' => 'success',
+                'id_reasigned' => $task_id,
+                'new_id_reasigned' => $order
+            );
+        }
+    }
+    catch(Exception $e) {
+        $answer = array(
+            'answer' => 'error',
+            'error' => $e->getMessage()
+        );
+    }
+    echo json_encode($answer);
+}
+
+
 if($action === "edit") {
 
     $name_edit = $_POST['nameToEdit'];
@@ -94,7 +123,7 @@ if($action === "edit") {
         }
         else {
             $answer = array(
-                'answer' => 'without changes',
+                'answer' => 'without_changes',
                 'name_edit' => $name_edit,
                 'id_edit' => $id_edit
             );
