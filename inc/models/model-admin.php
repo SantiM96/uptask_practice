@@ -64,8 +64,6 @@ if($action === 'crear') {
             }
             $conn->close();
         }
-
-
     }
     catch(Exception $e) {
         $answer = array(
@@ -74,10 +72,7 @@ if($action === 'crear') {
             'type' => $action
         );
     }
-    
     echo json_encode($answer);
-
-
 }
 
 if($action === 'login') {
@@ -133,9 +128,3 @@ if($action === 'login') {
 
     echo json_encode($answer);
 }
-
-
-
-
-
-
